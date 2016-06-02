@@ -4,7 +4,7 @@ require './app.rb'
 
 class Event 
 
-    attr_reader :event
+    attr_reader :title,:description, :location, :time 
 
     def initialize event
        @title = event["title"] 

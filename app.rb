@@ -1,3 +1,8 @@
+#GET request: curl http://localhost:4567/calendar -H "AUTHORIZATION: arb"
+
+#POST request: curl -X POST -d'{"title":"tion":"stuff","time":"sometime","location":"somewher"}' http://localhost:4567/calendar -H "AUTHORIZATION: arb"
+#
+
 require 'sinatra/base'
 require 'httparty'
 require 'sinatra/json'
@@ -46,6 +51,9 @@ class EventPlannerApp < Sinatra::Base
         if event.valid?
             DB[username] ||= []
             DB[username].push event 
+            status 200
+            binding.pry
+            body "Calendar updated with:" 
         else
             status 422
             body "Event not valid"
@@ -60,4 +68,3 @@ end
 if $PROGRAM_NAME == __FILE__
     EventPlannerApp.run!
 end
-binding.pry
