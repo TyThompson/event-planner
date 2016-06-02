@@ -1,14 +1,14 @@
 require 'sinatra/base'
-require 'HTTParty'
+require 'httparty'
 require 'sinatra/json'
 require 'json'
 require './Event.rb'
+require 'pry'
 
 class EventPlannerApp < Sinatra::Base
     set :logging, true
     set :show_exceptions, false
     error do |e|
-        binding.pry
         raise e
     end
 
@@ -38,14 +38,14 @@ class EventPlannerApp < Sinatra::Base
         body = request.body.read
 
         begin
-            event =Event.new(JSON.parse body)
+            event = Event.new(JSON.parse body)
         rescue
             status 400
             halt "Can't parse json: '#{body}'"
         end
         if event.valid?
             DB[username] ||= []
-            DB[username].push new_event
+            DB[username].push event 
         else
             status 422
             body "Event not valid"

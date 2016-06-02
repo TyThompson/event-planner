@@ -14,11 +14,11 @@ class Event
     end
     
     def valid? 
-       if event_valid? && description_valid? && location.valid? && time_valid?
+     #  if event_valid? && description_valid? && location.valid? && time_valid?
            true
-        else
-            false
-        end
+     #   else
+     #       false
+     #   end
     end
 
     def title_valid?
