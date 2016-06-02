@@ -1,7 +1,7 @@
 require 'sinatra/base'
 require 'sinatra/json'
 require 'json'
-
+some change
 class EventPlannerApp < Sinatra::Base
   set :logging, true
   set :show_exceptions, false
