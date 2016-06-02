@@ -28,6 +28,34 @@ class EventPlannerApp < Sinatra::Base
   end
 end
 
+   get "/calendar" do
+    DB[username] ||= []
+    json DB[username]
+    end
+
+    post "/calendar" do
+        body = request.body.read
+
+        begin
+            new_event =Event.new(JSON.parse body)
+        rescue
+            status 400
+            halt "Can't parse json: '#{body}'"
+        end
+        if new_event.valid?
+            DB[username] ||= []
+            DB[username].push new_event
+        else
+            status 422
+            body "Event not valid"
+
+        end
+
+
+
+    end
+
+
 
 if $PROGRAM_NAME == __FILE__
     EventPlannerApp.run!
