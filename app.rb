@@ -43,10 +43,24 @@ class EventPlannerApp < Sinatra::Base
 
 
     get "/calendar" do
-        DB[username] ||= []
+        DB[username] ||= [] 
         calendar = print_calendar
         json calendar
     end
+
+    get "/calendar/:title" do
+        DB[username] ||= [] 
+         if :title 
+             event = existing_item = DB[username].find { |i| i.title == title}
+            weather = display_weather (date,zip)
+            status 200
+            body weather 
+        else
+            status 404
+        end
+
+    end
+
 
     post "/calendar" do
         body = request.body.read
@@ -58,7 +72,7 @@ class EventPlannerApp < Sinatra::Base
             halt "Can't parse json: '#{body}'"
         end
         if event.valid?
-            DB[username] ||= []
+            DB[username] ||= [] 
             DB[username].push event
             status 200
             body "Calendar updated with: #{event.title} at #{event.time} on #{event.date} at #{event.zipcode}\n"
@@ -70,11 +84,9 @@ class EventPlannerApp < Sinatra::Base
     end
 
     delete "/calendar" do
-        #title = params[:title]
         title = request.body.read
         DB[username] ||= []
         existing_item = DB[username].find { |i| i.title == title}
-        binding.pry
         
         if existing_item
             DB[username].delete existing_item
@@ -84,6 +96,20 @@ class EventPlannerApp < Sinatra::Base
             status 404
         end
     end
+
+    def display_weather(month, day, zip)
+        fetch_data = fetch_weather("zip")
+        days = date_math(month, day)
+        if date_math(month, day) < 13
+            print "Avg High: ", max_temp(fetch_data, days)
+            puts
+            print "Avg Low: ", min_temp(fetch_data, days)
+            puts
+            print "Rain Chance: ", rain_chance(fetch_data, days)
+        else
+            print "Can only check weather 2 weeks in advance."
+        end
+    end   
 
 
 end
