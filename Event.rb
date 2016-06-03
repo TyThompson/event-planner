@@ -4,13 +4,14 @@ require './app.rb'
 
 class Event 
 
-    attr_reader :title,:description, :location, :time 
+    attr_reader :title, :date, :zipcode, :time  
 
     def initialize event
        @title = event["title"] 
-       @description = event["description"]
-       @location = event["location"]
-       @time = event["event"]
+       @date = event["date"]
+       @zipcode = event["zipcode"]
+       @time = event["time"]
+      
     end
     
     def valid? 
@@ -19,25 +20,21 @@ class Event
      #   else
      #       false
      #   end
-    end
+    end 
 
     def title_valid?
         unless @title == @title.to_i.to_s
         end
     end
-    
-    def desc_valid?
-        unless @description == @description.to_i.to_s
-            true
-        end
-    end
-
-    def location_valid?
+   
+    def zipcode_valid?
         unless @location.count != 5 || !@location.is_an_integer?
             true
         end
     end
 
+    def fetch_weather zipcode, date
 
+    end
 
 end

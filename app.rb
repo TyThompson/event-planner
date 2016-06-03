@@ -1,7 +1,6 @@
-#GET request: curl http://localhost:4567/calendar -H "AUTHORIZATION: arb"
-
-#POST request: curl -X POST -d'{"title":"tion":"stuff","time":"sometime","location":"somewher"}' http://localhost:4567/calendar -H "AUTHORIZATION: arb"
-#
+#curl http://localhost:4567/calendar -H "AUTHORIZATION: arb"
+#curl -X POST -d'{"title": "another event","date":"04044444","time":"sometime","zipcode":"06405"}' http://localhost:4567/calendar -H "AUTHORIZATION: arb"
+#curl -X DELETE -d '{"title":"new"}' http://localhost:4567/calendar -H "AUTHORIZATION: arb"
 
 require 'sinatra/base'
 require 'httparty'
@@ -34,9 +33,19 @@ class EventPlannerApp < Sinatra::Base
         request.env["HTTP_AUTHORIZATION"]
     end
 
+    def print_calendar
+        array = []
+        DB[username].each do |event|
+            array.push event.title
+        end
+        return array
+    end
+
+
     get "/calendar" do
         DB[username] ||= []
-        json DB[username]
+        calendar = print_calendar
+        json calendar 
     end
 
     post "/calendar" do
@@ -52,18 +61,32 @@ class EventPlannerApp < Sinatra::Base
             DB[username] ||= []
             DB[username].push event 
             status 200
-            binding.pry
-            body "Calendar updated with:" 
+            body "Calendar updated with: #{event.title} at #{event.time} on #{event.date} at #{event.zipcode}\n" 
         else
             status 422
             body "Event not valid"
 
         end
-
-
-
     end
+
+    delete "/calendar" do
+        #title = params[:title]
+        title = request.body.read
+
+        DB[username] ||= []
+        existing_item = DB[username].find { |i| i["title"] == title}
+        if existing_item
+            DB[username].delete existing_item
+            status 200
+            body "#{title} deleted!"
+        else
+            status 404
+        end 
+    end
+
+
 end
+
 
 if $PROGRAM_NAME == __FILE__
     EventPlannerApp.run!
