@@ -45,7 +45,7 @@ class EventPlannerApp < Sinatra::Base
     get "/calendar" do
         DB[username] ||= []
         calendar = print_calendar
-        json calendar 
+        json calendar
     end
 
     post "/calendar" do
@@ -59,9 +59,9 @@ class EventPlannerApp < Sinatra::Base
         end
         if event.valid?
             DB[username] ||= []
-            DB[username].push event 
+            DB[username].push event
             status 200
-            body "Calendar updated with: #{event.title} at #{event.time} on #{event.date} at #{event.zipcode}\n" 
+            body "Calendar updated with: #{event.title} at #{event.time} on #{event.date} at #{event.zipcode}\n"
         else
             status 422
             body "Event not valid"
@@ -72,16 +72,17 @@ class EventPlannerApp < Sinatra::Base
     delete "/calendar" do
         #title = params[:title]
         title = request.body.read
-
         DB[username] ||= []
-        existing_item = DB[username].find { |i| i["title"] == title}
+        existing_item = DB[username].find { |i| i.title == title}
+        binding.pry
+        
         if existing_item
             DB[username].delete existing_item
             status 200
             body "#{title} deleted!"
         else
             status 404
-        end 
+        end
     end
 
 
