@@ -56,12 +56,11 @@ class EventPlannerApp < Sinatra::Base
     if title
       event = DB[username].find { |i| i.title == title}
       date = event.date.split("").map(&:to_i)
-      day = event.date[0,2]
-      month = event.date[2..3]
-      binding.pry
+      month = event.date[0,2].to_i
+      day = event.date[2..3].to_i
       weather = display_weather(month,day,event.zipcode)
       status 200
-      body weather
+      body "Event: #{event.title}, Time: #{event.time}, Zipcode: #{event.zipcode}, WEATHER: #{weather}. Have a great event!"
     else
       status 404
     end

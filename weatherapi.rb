@@ -1,12 +1,15 @@
 require 'json'
-require './token'
+require './token.rb'
 require 'pry'
 require 'HTTParty'
 require 'Date'
 require 'Time'
+require './Event'
+require './app.rb'
 
 
 def fetch_weather(zipcode)
+	binding.pry
 	HTTParty.get("http://api.worldweatheronline.com/premium/v1/weather.ashx?key=#{@token2}&q=#{zipcode}&tp=24&format=json")
 	# data = JSON.parse File.read '.\plannerdata.json'
 end
@@ -30,20 +33,25 @@ def date_math(month, day)
 end
 
 def display_weather(month, day, zip)
+
   fetch_data = fetch_weather("zip")
   days = date_math(month, day)
   if date_math(month, day) < 13
-    print "Avg High: ", max_temp(fetch_data, days)
-    puts
-    print "Avg Low: ", min_temp(fetch_data, days)
-    puts
-    print "Rain Chance: ", rain_chance(fetch_data, days)
+		# binding.pry
+		maxtemp = max_temp(fetch_data, days)
+		mintemp = min_temp(fetch_data, days)
+		rain = rain_chance(fetch_data, days)
+    return "Avg High: #{maxtemp}, Avg Low: #{mintemp}, Rain Chance: #{rain}"
+  #   puts
+  #   print "Avg Low: ", min_temp(fetch_data, days)
+  #   puts
+  #   print "Rain Chance: ", rain_chance(fetch_data, days)
   else
-    print "Can only check weather 2 weeks in advance."
+     return "Can only check weather 2 weeks in advance."
   end
 end
-display_weather(06,06,27703)
-binding.pry
+# display_weather(06,07,'27703')
+#month,day,zip
 
 #15 days or greater don't get weather
 					# Date example 06020602
