@@ -58,7 +58,7 @@ class EventPlannerApp < Sinatra::Base
       date = event.date.split("").map(&:to_i)
       month = event.date[0,2].to_i
       day = event.date[2..3].to_i
-      weather = display_weather(month,day,event.zipcode)
+      weather = display_weather(month,day,event.time, event.zipcode)
       status 200
       body "Event: #{event.title}, Time: #{event.time}, Zipcode: #{event.zipcode}, WEATHER: #{weather}. Have a great event!"
     else

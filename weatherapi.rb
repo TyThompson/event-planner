@@ -9,12 +9,12 @@ require './app.rb'
 
 def fetch_weather(zipcode)
   token = ENV["WEATHER_API_KEY"]
-	HTTParty.get("http://api.worldweatheronline.com/premium/v1/weather.ashx?key=#{token}&q=#{zipcode}&tp=24&format=json")
+	HTTParty.get("http://api.worldweatheronline.com/premium/v1/weather.ashx?key=#{token}&q=#{zipcode}&tp=1&format=json")
 	# data = JSON.parse File.read '.\plannerdata.json'
 end
 
-def rain_chance(fetch_data, days)
-	fetch_data['data']['weather'][days]['hourly'][0]['chanceofrain']
+def rain_chance(fetch_data, days, hour)
+	fetch_data['data']['weather'][days]['hourly'][hour]['chanceofrain']
 end
 
 def max_temp(fetch_data, days)
@@ -25,38 +25,32 @@ def min_temp(fetch_data, days)
 	fetch_data['data']['weather'][days]['mintempF']
 end
 
+def hour_temp(fetch_data, days, hour)
+  # http://api.worldweatheronline.com/premium/v1/weather.ashx?key=#{token}&q=27703&tp=1&format=json
+  fetch_data['data']['weather'][days]['hourly'][hour]['tempF']
+end
+
 def date_math(month, day)
   endDate = Date.new(2016,month,day)
   beginDate = DateTime.now
   days = (endDate - beginDate).to_i
 end
 
-def display_weather(month, day, zip)
+def display_weather(month, day, hour, zip)
 
   fetch_data = fetch_weather("zip")
   days = date_math(month, day)
   if date_math(month, day) < 13
 		maxtemp = max_temp(fetch_data, days)
 		mintemp = min_temp(fetch_data, days)
-		rain = rain_chance(fetch_data, days)
-    return "Avg High: #{maxtemp}, Avg Low: #{mintemp}, Rain Chance: #{rain}"
-  #   puts
-  #   print "Avg Low: ", min_temp(fetch_data, days)
-  #   puts
-  #   print "Rain Chance: ", rain_chance(fetch_data, days)
+    hourtemp = hour_temp(fetch_data, days, hour)
+		rain = rain_chance(fetch_data, days, hour)
+    return "Avg High: #{maxtemp}, Avg Low: #{mintemp}, Temp: #{hourtemp}, Rain Chance: #{rain}"
   else
      return "Can only check weather 2 weeks in advance."
   end
 end
 
-# display_weather(06,07,'27703')
-#month,day,zip
-
-#15 days or greater don't get weather
-					# Date example 06020602
-					#              MMDD-MMDD
-
-# fetch_data = fetch_weather("27703")
 # days = date_math(06, 06)
 #               month, day
 # out_of_calls = JSON.parse File.read 'out_of_calls.json'
