@@ -8,7 +8,7 @@ require './app.rb'
 
 
 def fetch_weather(zipcode)
-	#  token = ENV["WEATHER_API_KEY"]
+	token = ENV["WEATHER_API_KEY"]
 	HTTParty.get("http://api.worldweatheronline.com/premium/v1/weather.ashx?key=#{token}&q=#{zipcode}&tp=1&format=json")
 	# data = JSON.parse File.read '.\plannerdata.json'
 end
@@ -27,13 +27,7 @@ end
 
 def hour_temp(fetch_data, days, hour)
 	# http://api.worldweatheronline.com/premium/v1/weather.ashx?key=#{token}&q=27703&tp=1&format=json
-	# fetch_data['data']['weather'][days]['hourly'][hour]['tempF']
-	fetch_data['data']['weather'][days]['hourly'].each do |time|
-		if time["time"] == hour.to_s
-			return time['tempF']
-		end
-	end
-
+	fetch_data['data']['weather'][days]['hourly'][hour]['tempF']
 end
 
 def date_math(month, day)
