@@ -58,7 +58,7 @@ class EventPlannerApp < Sinatra::Base
       date = event.date.split("").map(&:to_i)
       month = event.date[0,2].to_i
       day = event.date[2..3].to_i
-      hour = event.time.to_i-1 #so 13:45 becomes 13 - 1 = 12, must use military time (1-24)
+      hour = (event.time.to_i).round(-2) #so 13:45 becomes 13 - 1 = 12, must use military time (1-24). ARB: to_i-1 makes 13:45 into 13:44. Just gonna prompt the user for military time for now
       weather = display_weather(month,day,hour,event.zipcode)
       status 200
       body "Event: #{event.title}, Time: #{event.time}, Zipcode: #{event.zipcode}, WEATHER: #{weather}. Have a great event!"
