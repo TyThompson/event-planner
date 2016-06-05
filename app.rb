@@ -1,5 +1,5 @@
 #curl http://localhost:4567/calendar -H "AUTHORIZATION: arb"
-#curl -X POST -d'{"title": "another event","date":"04044444","time":"sometime","zipcode":"06405"}' http://localhost:4567/calendar -H "AUTHORIZATION: arb"
+#curl -X POST -d'{"title": "another event","date":"04044444","time":"13:45","zipcode":"06405"}' http://localhost:4567/calendar -H "AUTHORIZATION: arb"
 #curl -X DELETE -d '{"title":"new"}' http://localhost:4567/calendar -H "AUTHORIZATION: arb"
 
 require 'sinatra/base'
@@ -58,7 +58,8 @@ class EventPlannerApp < Sinatra::Base
       date = event.date.split("").map(&:to_i)
       month = event.date[0,2].to_i
       day = event.date[2..3].to_i
-      weather = display_weather(month,day,event.time, event.zipcode)
+      hour = event.time.to_i-1 #so 13:45 becomes 13 - 1 = 12, must use military time (1-24)
+      weather = display_weather(month,day,hour,event.zipcode)
       status 200
       body "Event: #{event.title}, Time: #{event.time}, Zipcode: #{event.zipcode}, WEATHER: #{weather}. Have a great event!"
     else
