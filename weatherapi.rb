@@ -1,5 +1,4 @@
 require 'json'
-require './token.rb'
 require 'pry'
 require 'HTTParty'
 require 'Date'
@@ -9,8 +8,8 @@ require './app.rb'
 
 
 def fetch_weather(zipcode)
-	binding.pry
-	HTTParty.get("http://api.worldweatheronline.com/premium/v1/weather.ashx?key=#{@token2}&q=#{zipcode}&tp=24&format=json")
+  token = ENV["WEATHER_API_KEY"]
+	HTTParty.get("http://api.worldweatheronline.com/premium/v1/weather.ashx?key=#{token}&q=#{zipcode}&tp=24&format=json")
 	# data = JSON.parse File.read '.\plannerdata.json'
 end
 
@@ -37,7 +36,6 @@ def display_weather(month, day, zip)
   fetch_data = fetch_weather("zip")
   days = date_math(month, day)
   if date_math(month, day) < 13
-		# binding.pry
 		maxtemp = max_temp(fetch_data, days)
 		mintemp = min_temp(fetch_data, days)
 		rain = rain_chance(fetch_data, days)
@@ -50,6 +48,7 @@ def display_weather(month, day, zip)
      return "Can only check weather 2 weeks in advance."
   end
 end
+
 # display_weather(06,07,'27703')
 #month,day,zip
 
