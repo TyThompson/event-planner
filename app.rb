@@ -1,6 +1,8 @@
 #curl http://localhost:4567/calendar -H "AUTHORIZATION: arb"
 #curl -X POST -d'{"title": "another event","date":"04044444","time":"13:45","zipcode":"06405"}' http://localhost:4567/calendar -H "AUTHORIZATION: arb"
 #curl -X DELETE -d '{"title":"new"}' http://localhost:4567/calendar -H "AUTHORIZATION: arb"
+#curl -X POST -d'{"title": "another event","date":"04044444","time":"13:45","zipcode":"06405"}' http://tiy-event-planner.herokuapp.com/calendar -H "AUTHORIZATION: arb"
+#curl -X DELETE -d '{"title":"new"}' http://tiy-event-planner.herokuapp.com/calendar -H "AUTHORIZATION: arb"
 
 require 'sinatra/base'
 require 'httparty'
